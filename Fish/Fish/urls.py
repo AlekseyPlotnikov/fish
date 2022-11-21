@@ -27,6 +27,8 @@ urlpatterns = [
     path('', include('fishapp.urls')),
 
 ]
+#urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR)
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
