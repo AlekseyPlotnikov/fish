@@ -1,10 +1,11 @@
 from django.urls import path, re_path
 
-from .views import categories, index, archive
+from .views import categories, index, archive, about
 
 urlpatterns = [
     path('', index, name='home'),
-    path('categories/<int:categoryid>/', categories),
-    re_path(r'^archive/(?P<year>[0-9]{4})/', archive),
+    #path('categories/<int:categoryid>/', categories),
+    #re_path(r'^archive/(?P<year>[0-9]{4})/', archive),
+    path('about/', about, name='about'),
 
 ]

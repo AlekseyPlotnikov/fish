@@ -1,9 +1,17 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect
 
+from .models import *
+menu = ['О сайте', 'Добавить статью', 'Обратная связь', 'Войти']
+
 
 def index(request):
-    return HttpResponse('Страница приложения о рыбах.')
+    posts = Fish.objects.all()
+    return render(request, 'fishapp/index.html',  {'posts': posts, 'menu': menu, 'title': 'Главная страница'})
+
+
+def about(request):
+    return render(request, 'fishapp/about.html', {'menu': menu,  'title': 'О сайте'})
 
 
 def categories(request, categoryid):
@@ -21,4 +29,3 @@ def archive(request, year):
 
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена.</h1>')
-
