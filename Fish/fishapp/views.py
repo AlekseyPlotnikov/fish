@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
+from .forms import *
 from .models import *
 
 
@@ -19,7 +20,8 @@ def about(request):
 
 
 def addpage(request):
-    return HttpResponse('Добавить статью')
+    form = AddPostForm()
+    return render(request, 'fishapp/addpage.html', {'form': form, 'title': 'О сайте'})
 
 
 def login(request):
