@@ -37,4 +37,4 @@ class Fish(models.Model):
     class Meta:
         verbose_name = 'Виды рыб'
         verbose_name_plural = 'Виды рыб'
-        ordering = ['-id']
+        ordering = ['id']
