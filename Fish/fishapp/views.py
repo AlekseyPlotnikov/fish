@@ -1,4 +1,6 @@
+from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 from django.core import paginator
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound, Http404
@@ -76,9 +78,10 @@ def addpage(request):
     return render(request, 'fishapp/addpage.html', {'form': form, 'title': 'Добавление статьи'})
 '''
 
-
+'''
 def login(request):
     return HttpResponse('Аторитизация')
+'''
 
 
 def contact(request):
@@ -154,3 +157,26 @@ class RegisterUser(DataMixin, CreateView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Регистрация')
         return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('home')
+
+
+class LoginUser(DataMixin, LoginView):
+    form_class = LoginUserForm
+    template_name = 'fishapp/login.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Авторитизация')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
