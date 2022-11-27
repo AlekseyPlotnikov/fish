@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import login_required
+from django.core import paginator
+from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -8,8 +10,15 @@ from .models import *
 from .utils import DataMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+menu = [{'title': "О сайте", 'url_name': 'about'},
+        {'title': "Добавить статью", 'url_name': 'add_page'},
+        {'title': "Обратная связь", 'url_name': 'contact'},
+        {'title': "Войти", 'url_name': 'login'}
+        ]
+
 
 class FishHome(DataMixin, ListView):
+    paginate_by = 3
     model = Fish
     template_name = 'fishapp/index.html'
     context_object_name = 'posts'
@@ -35,8 +44,13 @@ def index(request):
 
 '''
 
+
 def about(request):
-    return render(request, 'fishapp/about.html', {'title': 'О сайте'})
+    contact_list = Fish.objects.all()
+    paginator = Paginator(contact_list, 3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'fishapp/about.html', {'page_obj': page_obj, 'menu': menu, 'title': 'О сайте'})
 
 
 class AddPage(LoginRequiredMixin, DataMixin, CreateView):
@@ -48,6 +62,7 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Добавление статьи')
         return dict(list(context.items()) + list(c_def.items()))
+
 
 '''
 def addpage(request):
