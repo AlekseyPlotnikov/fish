@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-{% load fishapp_tags %}
 {% load static %}
 <html>
 <head>
@@ -15,8 +14,13 @@
 		<div class="header">
 			<ul id="mainmenu" class="mainmenu">
 				<li class="logo"><a href="{%url 'home'%}"><div class="logo"></div></a></li>
-{% show_main_menu %}
-			</ul>
+{% for m in menu %}
+	{% if not forloop.last %}
+			<li><a href="{% url m.url_name %}">{{m.title}}</a></li>
+	{% else %}
+			<li class="last"><a href="{% url m.url_name %}">{{m.title}}</a></li>
+	{% endif %}
+{% endfor %}			</ul>
 			<div class="clear"></div>
 		</div>
 {% endblock mainmenu %}
@@ -33,7 +37,15 @@
 		<li><a href="{% url 'home' %}">Все категории</a> </li>
 {% endif %}
 
-{% show_categories '-name' cat_selected %}
+ {% for c in cats %}
+		{% if c.fish__count > 0 %}
+		{% if c.pk == cat_selected %}
+			<li class="selected">{{ c.name }}</li>
+			{% else %}
+			<li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+{% endif %}
+	{% endif %}
+{% endfor %}
 
 	</ul>
 </td>
